@@ -257,6 +257,8 @@ packages:
         - docker
         - docker-compose
         - docker-buildx
+        - nano
+        - wget
       action: install
       releases:
         - tumbleweed

@@ -256,6 +256,8 @@ packages:
         - podman
         - podman-compose
         - podman-docker
+        - nano
+        - wget
       action: install
       releases:
         - tumbleweed
