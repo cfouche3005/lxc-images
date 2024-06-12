@@ -1,0 +1,150 @@
+---
+
+files:
+
+- generator: copy
+  source: /root/distrobuilder/files/debian-ifupdown/home
+  mode: 644
+  path: /home/
+
+- generator: copy
+  source: /root/distrobuilder/files/debian-ifupdown/etc
+  mode: 644
+  path: /etc/
+
+- generator: copy
+  source: /root/distrobuilder/files/debian-ifupdown/root
+  mode: 644
+  path: /root/
+
+- generator: copy
+  source: /root/distrobuilder/files/debian-ifupdown/init-scripts
+  mode: 700
+  path: /etc/init.d
+
+- generator: copy
+  source: /root/distrobuilder/files/debian-ifupdown/cloudinit-per-once
+  mode: 700
+  path: /var/lib/cloud/scripts/per-once/
+
+packages:
+  manager: apt
+  update: true
+  cleanup: true
+  sets:
+    - packages:
+        - debian-ports-archive-keyring
+      action: install
+      early: true
+      architectures:
+        - riscv64
+    - packages:
+        - dialog
+        - init
+        - iproute2
+        - iputils-ping
+        - isc-dhcp-client
+        - locales
+        - netbase
+        - net-tools
+        - openssh-client
+        - procps
+        - sudo
+        - nano
+      action: install
+    - packages:
+        - ifupdown
+      action: install
+      releases:
+        - buster
+        - bullseye
+    - packages:
+        - udev
+      action: install
+      releases:
+        - bullseye
+        - bookworm
+        - sid
+        - trixie
+    - packages:
+        - dbus
+        - ifupdown-ng
+      action: install
+      early: true
+      releases:
+        - bookworm
+        - sid
+        - trixie
+    - packages:
+        - cloud-init
+        - gpg
+      action: install
+      variants:
+        - cloud
+    - packages:
+        - policykit-1
+      action: install
+      architectures:
+        - amd64
+        - arm64
+      types:
+        - vm
+    - packages:
+        - grub-efi
+      action: install
+      types:
+        - vm
+      architectures:
+        - amd64
+    - packages:
+        - linux-image-amd64
+      action: install
+      types:
+        - vm
+      architectures:
+        - amd64
+      releases:
+        - buster
+        - bullseye
+        - sid
+        - bookworm
+        - trixie
+    - packages:
+        - grub-efi-arm64
+        - linux-image-arm64
+      action: install
+      types:
+        - vm
+      architectures:
+        - arm64
+    - packages:
+        - shim-signed
+      action: install
+      types:
+        - vm
+      releases:
+        - buster
+        - bullseye
+        - sid
+        - bookworm
+        - trixie
+  repositories:
+    - name: sources.list
+      url: |-
+        deb http://deb.debian.org/debian {{ image.release }} main
+        {% if image.release != "sid" %}deb http://deb.debian.org/debian {{ image.release }}-updates main{% endif %}
+        {% if image.release != "sid" and image.release != "buster" %}deb http://deb.debian.org/debian-security/ {{ image.release }}-security main{% endif %}
+        {% if image.release == "buster" %}deb http://deb.debian.org/debian-security/ {{ image.release }}/updates main{% endif %}
+      architectures:
+        - amd64
+        - arm64
+        - armel
+        - armhf
+        - i386
+        - ppc64el
+        - s390x
+    - name: sources.list
+      url: |-
+        deb http://deb.debian.org/debian sid main
+      architectures:
+        - riscv64

@@ -1,0 +1,68 @@
+---
+
+files:
+
+- generator: copy
+  source: /root/distrobuilder/files/alpine-nano/home
+  mode: 644
+  path: /home/
+
+- generator: copy
+  source: /root/distrobuilder/files/alpine-nano/etc
+  mode: 644
+  path: /etc/
+
+- generator: copy
+  source: /root/distrobuilder/files/alpine-nano/root
+  mode: 644
+  path: /root/
+
+- generator: copy
+  source: /root/distrobuilder/files/alpine-nano/init-scripts
+  mode: 700
+  path: /etc/init.d
+
+- generator: copy
+  source: /root/distrobuilder/files/alpine-nano/cloudinit-per-once
+  mode: 700
+  path: /var/lib/cloud/scripts/per-once/
+
+packages:
+  manager: apk
+  update: true
+  cleanup: true
+  sets:
+    - packages:
+        - alpine-base
+        - logrotate
+        - doas
+        - nano
+      action: install
+    - packages:
+        - cloud-init
+        - openssh
+        - e2fsprogs-extra
+      action: install
+      variants:
+        - cloud
+    - packages:
+        - py3-pyserial
+        - py3-netifaces
+      action: install
+      variants:
+        - cloud
+      releases:
+        - 3.17
+        - 3.18
+        - 3.19
+        - 3.20
+        - edge
+    - packages:
+        - acpi
+        - gcc
+        - grub-efi
+        - linux-virt
+        - udev
+      action: install
+      types:
+        - vm

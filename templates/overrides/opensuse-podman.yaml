@@ -1,0 +1,116 @@
+---
+
+files:
+
+- generator: copy
+  source: /root/distrobuilder/files/opensuse-podman/home
+  mode: 644
+  path: /home/
+
+- generator: copy
+  source: /root/distrobuilder/files/opensuse-podman/etc
+  mode: 644
+  path: /etc/
+
+- generator: copy
+  source: /root/distrobuilder/files/opensuse-podman/root
+  mode: 644
+  path: /root/
+
+- generator: copy
+  source: /root/distrobuilder/files/opensuse-podman/init-scripts
+  mode: 700
+  path: /etc/init.d
+
+- generator: copy
+  source: /root/distrobuilder/files/opensuse-podman/cloudinit-per-once
+  mode: 700
+  path: /var/lib/cloud/scripts/per-once/
+
+packages:
+  manager: zypper
+  update: true
+  cleanup: true
+  sets:
+    - packages:
+        - apparmor-abstractions
+        - apparmor-parser
+        - dbus-1
+        - elfutils
+        - file
+        - glib2-tools
+        - gzip
+        - hostname
+        - iproute2
+        - iputils
+        - pigz
+        - rsync
+        - sudo
+        - systemd-sysvinit
+        - tar
+        - which
+      action: install
+    - packages:
+        - hardlink
+        - podman
+        - podman-compose
+        - podman-docker
+      action: install
+      releases:
+        - tumbleweed
+    - packages:
+        - libdevmapper1_03
+      action: install
+      architectures:
+        - ppc64le
+    - packages:
+        - xz
+      action: install
+      architectures:
+        - aarch64
+        - x86_64
+        - i686
+    - packages:
+        - net-tools
+      releases:
+        - tumbleweed
+      action: install
+    - packages:
+        - cloud-init
+        - cloud-init-config-suse
+        - fdupes
+      action: install
+      variants:
+        - cloud
+    - packages:
+        - grub2-arm64-efi
+      action: install
+      types:
+        - vm
+      architectures:
+        - aarch64
+    - packages:
+        - shim
+        - grub2-x86_64-efi
+      action: install
+      types:
+        - vm
+      architectures:
+        - x86_64
+    - packages:
+        - e2fsprogs
+        - growpart
+        - kernel-default
+      action: install
+      types:
+        - vm
+    - packages:
+        - discover
+        - dolphin
+        - konsole
+        - sddm
+      action: install
+      types:
+        - vm
+      variants:
+        - desktop-kde
